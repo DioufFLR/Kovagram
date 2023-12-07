@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-var-requires,no-undef
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
