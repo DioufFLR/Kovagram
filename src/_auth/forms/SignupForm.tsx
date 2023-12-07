@@ -7,11 +7,14 @@ import {Button} from '@/components/ui/button';
 import {SignupValidtaion} from "@/lib/validation";
 import {z} from "zod";
 import Loader from "@/components/shared/Loader.tsx";
+import {createUserAccount} from "@/lib/appwrite/api.ts";
+import {useToast} from "@/components/ui/use-toast"
 
 
 const SignupForm = () => {
 
     const isLoading = false;
+    const {toast} = useToast();
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof SignupValidtaion>>({
@@ -27,8 +30,13 @@ const SignupForm = () => {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof SignupValidtaion>) {
         // Create a user
-        // const newUser = await createUserAccount(values);
-        console.log(values)
+        const newUser = await createUserAccount(values);
+
+        if (!newUser) {
+            return toast({title: 'Sign up failed. Please try again.'})
+        }
+
+        // const session = await signInAccount();
     }
 
 
@@ -38,7 +46,8 @@ const SignupForm = () => {
                 <img src="/assets/images/logo.svg" alt="logo"/>
 
                 <h2 className='h3-bold md:h2-bold pt-5 sm:pt-12'>Create a new account</h2>
-                <p className='text-light-3 small-medium md:base-regular mt-2'>To use Kovagram, please enter your details</p>
+                <p className='text-light-3 small-medium md:base-regular mt-2'>To use Kovagram, please enter your
+                    details</p>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
                     <FormField
                         control={form.control}
@@ -95,7 +104,7 @@ const SignupForm = () => {
                     <Button type="submit" className='shad-button_primary'>
                         {isLoading ? (
                             <div className='flex center gap-2'>
-                                <Loader />Loading...
+                                <Loader/>Loading...
                             </div>
                         ) : 'Sign up'
                         }
