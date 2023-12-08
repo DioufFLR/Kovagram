@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {IContextType, IUser} from "@/types";
-import {getCurrentUser} from "@/lib/react-query/queriesAndMutations.ts";
+import {getCurrentUser} from "@/lib/appwrite/api.ts";
 import {useNavigate} from "react-router-dom";
 
 export const INITIAL_USER = {
