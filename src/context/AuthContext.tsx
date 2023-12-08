@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {IContextType, IUser} from "@/types";
 import {getCurrentUser} from "@/lib/react-query/queriesAndMutations.ts";
 import {useNavigate} from "react-router-dom";
@@ -57,6 +57,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
         } finally {
             setIsLoading(false)
         }
+        return false;
     };
 
     useEffect(() => {
@@ -69,7 +70,7 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
         checkAuthUser();
     }, []);
 
-    const value = {
+    const value: IContextType = {
         user,
         setUser,
         isLoading,
@@ -78,7 +79,6 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
         checkAuthUser
     }
 
-    // @ts-ignore
     return (
         <AuthContext.Provider value={value}>
             {children}
