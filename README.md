@@ -9,9 +9,23 @@ Currently, two official plugins are available:
 
 ## Getting Started
 
+Run in your shell
+
 ```shell
 npm i 
 npm run dev
+```
+
+Create .env.local for your API
+
+```dotenv
+VITE_APPWRITE_PROJECT_ID='enterYourId'
+VITE_APPWRITE_URL='https://cloud.appwrite.io/v1'
+VITE_APPWRITE_STORAGE_ID='enterYourId'
+VITE_APPWRITE_DATABASE_ID='enterYourId'
+VITE_APPWRITE_USER_COLLECTION_ID='enterYourId'
+VITE_APPWRITE_POST_COLLECTION_ID='enterYourId'
+VITE_APPWRITE_SAVES_COLLECTION_ID='enterYourId'
 ```
 
 ## Expanding the ESLint configuration
