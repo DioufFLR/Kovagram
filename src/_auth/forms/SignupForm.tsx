@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input.tsx";
 import {Button} from '@/components/ui/button';
-import {SignupValidtaion} from "@/lib/validation";
+import {SignupValidtation} from "@/lib/validation";
 import {z} from "zod";
 import Loader from "@/components/shared/Loader.tsx";
 import {useToast} from "@/components/ui/use-toast"
@@ -18,13 +18,13 @@ const SignupForm = () => {
     const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
     const navigate = useNavigate();
 
-    const {mutateAsync: createUserAccount, isLoading: isCreatingUser} = useCreateUserAccount();
-    const {mutateAsync: signInAccount, isLoading: isSigninIn} = useSignInAccount();
+    const {mutateAsync: createUserAccount, isPending: isCreatingAccount} = useCreateUserAccount();
+    const {mutateAsync: signInAccount, isPending: isSigninIn} = useSignInAccount();
 
 
     // 1. Define your form.
-    const form = useForm<z.infer<typeof SignupValidtaion>>({
-        resolver: zodResolver(SignupValidtaion),
+    const form = useForm<z.infer<typeof SignupValidtation>>({
+        resolver: zodResolver(SignupValidtation),
         defaultValues: {
             name: '',
             username: "",
@@ -34,7 +34,7 @@ const SignupForm = () => {
     })
 
     // 2. Define a submit handler.
-    async function onSubmit(values: z.infer<typeof SignupValidtaion>) {
+    async function onSubmit(values: z.infer<typeof SignupValidtation>) {
         // Create a user
         const newUser = await createUserAccount(values);
 
@@ -125,7 +125,7 @@ const SignupForm = () => {
                         )}
                     />
                     <Button type="submit" className='shad-button_primary'>
-                        {isCreatingUser ? (
+                        {isCreatingAccount ? (
                             <div className='flex center gap-2'>
                                 <Loader/>Loading...
                             </div>
