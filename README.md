@@ -1,4 +1,4 @@
-# Kovagram 
+# ![kova.png](public%2Fassets%2Ficons%2Fkova.png)
 
 ### Social application
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
