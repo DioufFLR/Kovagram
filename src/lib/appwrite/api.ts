@@ -1,6 +1,13 @@
-import {INewUser} from "@/types";
-import {account, appwriteConfig, avatars, databases} from "@/lib/appwrite/config.ts";
+import {INewPost, INewUser} from "@/types";
+import {account, appwriteConfig, avatars, databases, storage} from "@/lib/appwrite/config.ts";
 import {ID, Query} from "appwrite";
+
+
+// ============================================================
+// AUTH
+// ============================================================
+
+// ============================== SIGN UP
 
 export async function createUserAccount(user: INewUser) {
     try {
@@ -31,6 +38,8 @@ export async function createUserAccount(user: INewUser) {
     }
 }
 
+// ============================== SAVE USER TO DB
+
 export async function saveUserToDB(user: {
     accountId: string;
     email: string;
@@ -52,6 +61,8 @@ export async function saveUserToDB(user: {
     }
 }
 
+// ============================== SIGN IN
+
 export async function signInAccount(user: { email: string; password: string }) {
     try {
         const session = await account.createEmailSession(user.email, user.password)
@@ -61,6 +72,8 @@ export async function signInAccount(user: { email: string; password: string }) {
         console.log(error);
     }
 }
+
+// ============================== GET USER
 
 export async function getCurrentUser() {
     try {
@@ -80,6 +93,8 @@ export async function getCurrentUser() {
     }
 }
 
+// ============================== SIGN OUT
+
 export async function signOutAccount() {
     try {
         const session = await account.deleteSession("current")
@@ -89,3 +104,117 @@ export async function signOutAccount() {
         console.log(error)
     }
 }
+
+// ============================================================
+// POSTS
+// ============================================================
+
+// ============================== CREATE POST
+
+export async function createPost(post: INewPost) {
+    try {
+        // Upload image to storage
+        const uploadedFile = await uploadFile(post.file[0])
+
+        if (!uploadedFile) throw Error;
+
+        // Get file url
+        const fileUrl = getFilePreview(uploadedFile.$id)
+
+        if (!fileUrl) {
+            await deleteFile(uploadedFile.$id)
+            throw Error;
+        }
+
+        // Convert tags in an array
+        const tags = post.tags?.repeat(/ /g, "").split(',') || [];
+
+        // Save post to database
+        const newPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            ID.unique(),
+            {
+                creator: post.userId,
+                caption: post.caption,
+                imageUrl: fileUrl,
+                imageId: uploadedFile.$id,
+                location: post.location,
+                tags: tags
+            }
+        )
+
+        if (!newPost) {
+            await deleteFile(uploadedFile.$id)
+            throw Error;
+        }
+
+        return newPost;
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== UPLOAD FILE
+
+export async function uploadFile(file: File) {
+    try {
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.storageId,
+            ID.unique(),
+            file
+        );
+
+        return uploadedFile
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== GET FILE URL
+
+export async function getFilePreview(fileId: string) {
+    try {
+        const fileUrl = storage.getFilePreview(
+            appwriteConfig.storageId,
+            fileId,
+            2000,
+            2000,
+            'top',
+            100,
+        )
+
+        return fileUrl
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== DELETE FILE
+
+export async function deleteFile(fileId: string) {
+    try {
+        await storage.deleteFile(appwriteConfig.storageId, fileId)
+
+        return {status: 'ok'}
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== GET POSTS
+
+
+// ============================================================
+// USER
+// ============================================================
+
+// ============================== GET USERS
+
+// ============================== GET USER BY ID
+
+// ============================== UPDATE USER
+
+
+
