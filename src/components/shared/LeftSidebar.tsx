@@ -1,4 +1,4 @@
-import {Link, NavLink, useNavigate, useLocation} from "react-router-dom";
+import {Link, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
 import {useSignOutAccount} from "@/lib/react-query/queriesAndMutations.ts";
 import {useEffect} from "react";
@@ -21,7 +21,7 @@ const LeftSidebar = () => {
         <nav className='leftsidebar'>
             <div className='flex flex-col gap-11'>
                 <Link to='/' className='flex gap-3 items-center'>
-                    <img src="/assets/images/logo.svg"
+                    <img src="/assets/icons/kova.png"
                          alt="logo"
                          width={170}
                          height={36}
