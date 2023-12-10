@@ -174,7 +174,7 @@ export async function uploadFile(file: File) {
 
 // ============================== GET FILE URL
 
-export async function getFilePreview(fileId: string) {
+export function getFilePreview(fileId: string) {
     try {
         const fileUrl = storage.getFilePreview(
             appwriteConfig.storageId,
@@ -215,6 +215,64 @@ export async function getRecentPosts() {
     if (!posts) throw Error;
 
     return posts;
+}
+
+// ============================== LIKE POST
+
+export async function likePost(postId: string, likesArray: string[]) {
+    try {
+        const updatedPost = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            postId,
+            {
+                likes: likesArray
+            }
+        )
+        if (!updatedPost) throw Error;
+
+        return updatedPost;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== SAVE POST
+
+export async function savePost(postId: string, userId: string) {
+    try {
+        const updatedPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            ID.unique(),
+            {
+                user: userId,
+                post: postId
+            }
+        )
+        if (!updatedPost) throw Error;
+
+        return updatedPost;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// ============================== DELETE POST
+
+export async function deleteSavedPost(savedRecordId: string) {
+    try {
+        const statusCode = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            savedRecordId,
+        )
+        if (!statusCode) throw Error;
+
+        return {status: 'ok'};
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // ============================================================
